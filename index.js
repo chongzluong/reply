@@ -1,3 +1,7 @@
+/**
+ * Reply wraps readline into easier prompts, so need to load readline
+ * @requires module:readline
+ */
 var rl, readline = require('readline');
 
 var get_interface = function(stdin, stdout) {
@@ -6,6 +10,12 @@ var get_interface = function(stdin, stdout) {
   return rl;
 }
 
+/**
+ * Asks a yes/no confirmation question
+ * @param {string} message - Confirmation message prompt
+ * @param {requestCallback} callback - The callback that handles the response
+ * @returns
+ */
 var confirm = exports.confirm = function(message, callback) {
 
   var question = {
@@ -23,11 +33,16 @@ var confirm = exports.confirm = function(message, callback) {
 
 };
 
+/**
+ * @param {Object} options - The array of elements for the user to respond to
+ * @param {requestCallback} callback - The callback that handles the response
+ * @returns
+ */
 var get = exports.get = function(options, callback) {
 
   if (!callback) return; // no point in continuing
 
-  if (typeof options != 'object')
+  if (typeof options != 'object') // incorrect parameter type options
     return callback(new Error("Please pass a valid options object."))
 
   var answers = {},
@@ -42,13 +57,16 @@ var get = exports.get = function(options, callback) {
 
   var close_prompt = function() {
     stdin.pause();
-    if (!rl) return;
+    if (!rl) return; //No readline to close
     rl.close();
     rl = null;
   }
 
+  // Gets the default option at the given key
   var get_default = function(key, partial_answers) {
     if (typeof options[key] == 'object')
+      // If the inner default option is a function, return the function's response given partial_answers
+      // Else return the inner default option
       return typeof options[key].default == 'function' ? options[key].default(partial_answers) : options[key].default;
     else
       return options[key];
@@ -58,9 +76,9 @@ var get = exports.get = function(options, callback) {
 
     if (reply.trim() == '')
       return;
-    else if (reply.match(/^(true|y(es)?)$/))
+    else if (reply.match(/^(true|y(es)?)$/)) // If the response is yes
       return true;
-    else if (reply.match(/^(false|n(o)?)$/))
+    else if (reply.match(/^(false|n(o)?)$/)) // If the response is no
       return false;
     else if ((reply*1).toString() === reply)
       return reply*1;
