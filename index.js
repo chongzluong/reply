@@ -65,8 +65,8 @@ var get = exports.get = function(options, callback) {
   // Gets the default option at the given key
   var get_default = function(key, partial_answers) {
     if (typeof options[key] == 'object')
-      // If the inner default option is a function, return the function's response given partial_answers
-      // Else return the inner default option
+      /** If the inner default option is a function, return the function's response given partial_answers */
+      /** Else return the inner default option */
       return typeof options[key].default == 'function' ? options[key].default(partial_answers) : options[key].default;
     else
       return options[key];
@@ -76,9 +76,9 @@ var get = exports.get = function(options, callback) {
 
     if (reply.trim() == '')
       return;
-    else if (reply.match(/^(true|y(es)?)$/)) // If the response is yes
+    else if (reply.match(/^(true|y(es)?)$/)) /** If the response is yes */
       return true;
-    else if (reply.match(/^(false|n(o)?)$/)) // If the response is no
+    else if (reply.match(/^(false|n(o)?)$/)) /** If the response is no */
       return false;
     else if ((reply*1).toString() === reply)
       return reply*1;
@@ -93,7 +93,7 @@ var get = exports.get = function(options, callback) {
     else if(regex = options[key].regex)
       return regex.test(answer);
     else if(options[key].options)
-      return options[key].options.indexOf(answer) != -1;
+      return options[key].options.indexOf(answer) != -1; /** the key exists in the inner options object */
     else if(options[key].type == 'confirm')
       return typeof(answer) == 'boolean'; // answer was given so it should be
     else if(options[key].type && options[key].type != 'password')
@@ -104,11 +104,13 @@ var get = exports.get = function(options, callback) {
   }
 
   var show_error = function(key) {
+    /** str is either a preapproved error message or 'Invalid value' */
     var str = options[key].error ? options[key].error : 'Invalid value.';
 
     if (options[key].options)
         str += ' (options are ' + options[key].options.join(', ') + ')';
 
+    /** prints out the error message */
     stdout.write("\033[31m" + str + "\033[0m" + "\n");
   }
 
@@ -121,6 +123,7 @@ var get = exports.get = function(options, callback) {
     if (options[key].options)
       msg += '(options are ' + options[key].options.join(', ') + ')';
 
+    /** prints out the message, if any */
     if (msg != '') stdout.write("\033[1m" + msg + "\033[0m\n");
   }
 
