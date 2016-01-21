@@ -93,7 +93,7 @@ var get = exports.get = function(options, callback) {
     else if(regex = options[key].regex)
       return regex.test(answer);
     else if(options[key].options)
-      return options[key].options.indexOf(answer) != -1; /** the key exists in the inner options object */
+      return options[key].options.indexOf(answer) != -1; /** The key exists in the inner options object */
     else if(options[key].type == 'confirm')
       return typeof(answer) == 'boolean'; // answer was given so it should be
     else if(options[key].type && options[key].type != 'password')
@@ -110,7 +110,7 @@ var get = exports.get = function(options, callback) {
     if (options[key].options)
         str += ' (options are ' + options[key].options.join(', ') + ')';
 
-    /** prints out the error message */
+    /** Prints out the error message */
     stdout.write("\033[31m" + str + "\033[0m" + "\n");
   }
 
@@ -123,7 +123,7 @@ var get = exports.get = function(options, callback) {
     if (options[key].options)
       msg += '(options are ' + options[key].options.join(', ') + ')';
 
-    /** prints out the message, if any */
+    /** Prints out the message, if any */
     if (msg != '') stdout.write("\033[1m" + msg + "\033[0m\n");
   }
 
@@ -131,17 +131,17 @@ var get = exports.get = function(options, callback) {
   var wait_for_password = function(prompt, callback) {
 
     var buf = '',
-        mask = '*';
+        mask = '*'; /** Character to conceal password */
 
     var keypress_callback = function(c, key) {
-
+      /** If the enter/return key has been pressed */
       if (key && (key.name == 'enter' || key.name == 'return')) {
         stdout.write("\n");
-        stdin.removeAllListeners('keypress');
+        stdin.removeAllListeners('keypress'); /** Stop checking for pushed keys */
         // stdin.setRawMode(false);
         return callback(buf);
       }
-
+      /** The c key closes the prompt */
       if (key && key.ctrl && key.name == 'c')
         close_prompt();
 
@@ -198,7 +198,7 @@ var get = exports.get = function(options, callback) {
       if (!dependencies_met(options[curr_key].depends_on))
         return next_question(++index, curr_key, undefined);
     }
-
+    /** User prompt based on option type (yes/no or other) */
     var prompt = (options[curr_key].type == 'confirm') ?
       ' - yes/no: ' : " - " + curr_key + ": ";
 
